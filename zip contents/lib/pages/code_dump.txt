@@ -1,0 +1,175 @@
+===============================================
+Old way to edit notes:
+// noteController.text = createdNotes[index].noteContent;
+// showDialog(
+//   context: context,
+//   builder: (BuildContext context) {
+//     return AlertDialog(
+//       title: const Text('Edit Note'),
+//       content: TextField(
+//         controller: noteController,
+//         maxLines: null,
+//         keyboardType: TextInputType.multiline,
+//       ),
+//       actions: <Widget>[
+//         TextButton(
+//           child: const Text('CANCEL'),
+//           onPressed: () {
+//             Navigator.pop(context);
+//           },
+//         ),
+//         TextButton(
+//           child: const Text('SAVE'),
+//           onPressed: () {
+//             setState(() {
+//               createdNotes[index].noteContent =
+//                   noteController.text;
+//             });
+//             Navigator.pop(context);
+//           },
+//         )
+//       ],
+//     );
+//   },
+// );
+===============================================
+
+import 'package:flutter/material.dart';
+import 'package:intl/intl.dart';
+
+class Reminder {
+  String message;
+  DateTime dateTime;
+
+  Reminder({this.message = '', required this.dateTime});
+}
+
+class ReminderScreen extends StatefulWidget {
+  const ReminderScreen({super.key});
+
+  @override
+  _ReminderScreenState createState() => _ReminderScreenState();
+}
+
+class _ReminderScreenState extends State<ReminderScreen> {
+  List<Reminder> reminders = [];
+  TextEditingController reminderMessageController = TextEditingController();
+  DateTime selectedDate = DateTime.now();
+  TimeOfDay selectedTime = TimeOfDay.now();
+
+  @override
+  Widget build(BuildContext context) {
+    return Scaffold(
+      appBar: AppBar(
+        title: const Text('Reminders'),
+      ),
+      body: ListView.builder(
+        itemCount: reminders.length,
+        itemBuilder: (BuildContext context, int index) {
+          return ListTile(
+            title: Text(reminders[index].message),
+            subtitle: Text(
+              DateFormat.yMMMd().add_jm().format(reminders[index].dateTime),
+            ),
+            onLongPress: () {
+              setState(() {
+                reminders.removeAt(index);
+              });
+            },
+          );
+        },
+      ),
+      floatingActionButton: FloatingActionButton(
+        child: const Icon(Icons.add),
+        onPressed: () {
+          reminderMessageController.text = '';
+          selectedDate = DateTime.now();
+          selectedTime = TimeOfDay.now();
+          showDialog(
+            context: context,
+            builder: (BuildContext context) {
+              return AlertDialog(
+                title: const Text('New Reminder'),
+                content: Column(
+                  mainAxisSize: MainAxisSize.min,
+                  children: <Widget>[
+                    TextField(
+                      controller: reminderMessageController,
+                      decoration: const InputDecoration(
+                        labelText: 'Message',
+                      ),
+                    ),
+                    const SizedBox(height: 10.0),
+                    ListTile(
+                      leading: const Icon(Icons.calendar_today),
+                      title: const Text('Date'),
+                      subtitle: Text(
+                        DateFormat.yMMMd().format(selectedDate),
+                      ),
+                      onTap: () async {
+                        final DateTime? picked = await showDatePicker(
+                          context: context,
+                          initialDate: selectedDate,
+                          firstDate: DateTime.now(),
+                          lastDate: DateTime(2100),
+                        );
+                        if (picked != null && picked != selectedDate) {
+                          setState(() {
+                            selectedDate = picked;
+                          });
+                        }
+                      },
+                    ),
+                    ListTile(
+                      leading: const Icon(Icons.access_time),
+                      title: const Text('Time'),
+                      subtitle:
+                          Text('${selectedTime.hour}:${selectedTime.minute}'),
+                      onTap: () async {
+                        final TimeOfDay? picked = await showTimePicker(
+                            context: context, initialTime: selectedTime);
+                        if (picked != null && picked != selectedTime) {
+                          setState(() {
+                            selectedTime = picked;
+                          });
+                        }
+                      },
+                    ),
+                  ],
+                ),
+                actions: <Widget>[
+                  TextButton(
+                    child: const Text('CANCEL'),
+                    onPressed: () {
+                      Navigator.pop(context);
+                    },
+                  ),
+                  TextButton(
+                    child: const Text('SAVE'),
+                    onPressed: () {
+                      setState(() {
+                        reminders.add(
+                          Reminder(
+                            message: reminderMessageController.text,
+                            dateTime: DateTime(
+                              selectedDate.year,
+                              selectedDate.month,
+                              selectedDate.day,
+                              selectedTime.hour,
+                              selectedTime.minute,
+                            ),
+                          ),
+                        );
+                      });
+                      Navigator.pop(context);
+                    },
+                  )
+                ],
+              );
+            },
+          );
+        },
+      ),
+    );
+  }
+}

@@ -4,34 +4,34 @@ import 'package:hive_flutter/hive_flutter.dart';
 import '../databases/task_database.dart';
 
 class TaskEditingScreen extends StatefulWidget {
-  late List<String> taskDetails; //indices: 0 = title, 1 = content, 2 = deadline
-  // int idToEdit;
+  // late List<String> taskDetails; //indices: 0 = title, 1 = content, 2 = deadline
+  int idToEdit;
 
-  TaskEditingScreen({required this.taskDetails, super.key});
+  TaskEditingScreen({required this.idToEdit, super.key});
 
   @override
   _TaskEditingScreenState createState() => _TaskEditingScreenState();
 }
 
 class _TaskEditingScreenState extends State<TaskEditingScreen> {
-  // final _taskBox = Hive.box('boxForTasks');
-  // final TaskDatabase _taskDatabase = TaskDatabase();
+  final _taskBox = Hive.box('boxForTasks');
+  final TaskDatabase _taskDatabase = TaskDatabase();
   TextEditingController taskTitleController = TextEditingController();
   TextEditingController taskContentController = TextEditingController();
   DateTime selectedDate = DateTime.now();
   TimeOfDay selectedTime = TimeOfDay.now();
-  // int taskIndex = 0;
+  int taskIndex = 0;
 
-  // @override
-  // void initState() {
-  //   if (_taskBox.get('TASKS') == null) {
-  //     _taskDatabase.createInitialTaskData();
-  //   } else {
-  //     _taskDatabase.loadTaskData();
-  //   }
-  //   _taskDatabase.updateTaskDataBase();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    if (_taskBox.get('TASKS') == null) {
+      _taskDatabase.createInitialTaskData();
+    } else {
+      _taskDatabase.loadTaskData();
+    }
+    _taskDatabase.updateTaskDataBase();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -122,10 +122,9 @@ class _TaskEditingScreenState extends State<TaskEditingScreen> {
                                 selectedDate.day,
                                 selectedTime.hour,
                                 selectedTime.minute);
-                            // _taskDatabase.existingTasks[taskIndex].taskDeadline = selectedDate;
-                            widget.taskDetails[2] =
-                                DateFormat("hh:mm a dd-MM-yyyy")
-                                    .format(selectedDate);
+                            _taskDatabase.existingTasks[taskIndex]
+                                .taskDeadline = selectedDate;
+                            // widget.taskDetails[2] = DateFormat("hh:mm a dd-MM-yyyy").format(selectedDate);
                           });
                         }
                       },
@@ -147,10 +146,9 @@ class _TaskEditingScreenState extends State<TaskEditingScreen> {
                                 selectedDate.day,
                                 selectedTime.hour,
                                 selectedTime.minute);
-                            // _taskDatabase.existingTasks[taskIndex].taskDeadline = selectedDate;
-                            widget.taskDetails[2] =
-                                DateFormat("hh:mm a dd-MM-yyyy")
-                                    .format(selectedDate);
+                            _taskDatabase.existingTasks[taskIndex]
+                                .taskDeadline = selectedDate;
+                            // widget.taskDetails[2] = DateFormat("hh:mm a dd-MM-yyyy").format(selectedDate);
                           });
                         }
                       },
@@ -167,25 +165,26 @@ class _TaskEditingScreenState extends State<TaskEditingScreen> {
   }
 
   void deleteTask() {
-    // String deleteValue =
-    //     'delete-31415926535delete-31415926535delete-31415926535';
-    // DateTime deleteValueDate = DateTime.now().subtract(const Duration(days: 736570));
-    // // _taskDatabase.existingTasks[taskIndex].taskTitle = deleteValue;
-    // // _taskDatabase.existingTasks[taskIndex].taskContent = deleteValue;
-    // // _taskDatabase.existingTasks[taskIndex].taskDeadline = deleteValueDate;
-    // // saveTaskEdits();
-    List<String> editedTaskData = [
-      'delete-31415926535delete-31415926535delete-31415926535', //title
-      'delete-31415926535delete-31415926535delete-31415926535', //content
-      'delete-31415926535delete-31415926535delete-31415926535', //deadline
-      //DateFormat("hh:mm a dd-MM-yyyy").format(DateTime.now().subtract(const Duration(days: 736570))), //deadline
-    ];
+    String deleteValue =
+        'delete-31415926535delete-31415926535delete-31415926535';
+    DateTime deleteValueDate =
+        DateTime.now().subtract(const Duration(days: 736570));
+    _taskDatabase.existingTasks[taskIndex].taskTitle = deleteValue;
+    _taskDatabase.existingTasks[taskIndex].taskContent = deleteValue;
+    _taskDatabase.existingTasks[taskIndex].taskDeadline = deleteValueDate;
+    saveTaskEdits();
+    // List<String> editedTaskData = [
+    //     'delete-31415926535delete-31415926535delete-31415926535', //title
+    //     'delete-31415926535delete-31415926535delete-31415926535', //content
+    //     'delete-31415926535delete-31415926535delete-31415926535', //deadline
+    //     //DateFormat("hh:mm a dd-MM-yyyy").format(DateTime.now().subtract(const Duration(days: 736570))), //deadline
+    // ];
 
-    Navigator.pop(context, editedTaskData);
+    Navigator.pop(context);
   }
 
   void _verifyAndSendEditedTaskBack(BuildContext context) {
-    if (widget.taskDetails[0].isEmpty) {
+    if (_taskDatabase.existingTasks[taskIndex].taskTitle.isEmpty) {
       showDialog(
           context: context,
           builder: (BuildContext context) {
@@ -195,41 +194,41 @@ class _TaskEditingScreenState extends State<TaskEditingScreen> {
             );
           });
     } else {
-      List<String> editedTaskData = [
-        widget.taskDetails[0], //title
-        widget.taskDetails[1], //content
-        widget.taskDetails[2], //deadline
-      ];
-      // saveTaskEdits();
-      Navigator.pop(context, editedTaskData);
+      // List<String> editedTaskData = [
+      //   widget.taskDetails[0], //title
+      //   widget.taskDetails[1], //content
+      //   widget.taskDetails[2], //deadline
+      // ];
+      saveTaskEdits();
+      Navigator.pop(context);
     }
   }
 
   void saveTaskEdits() {
-    // _taskDatabase.existingTasks[taskIndex].taskTitle = taskTitleController.text;
-    // _taskDatabase.existingTasks[taskIndex].taskContent = taskContentController.text;
-    // _taskDatabase.updateTaskDataBase();
-    widget.taskDetails[0] = taskTitleController.text;
-    widget.taskDetails[1] = taskContentController.text;
+    _taskDatabase.existingTasks[taskIndex].taskTitle = taskTitleController.text;
+    _taskDatabase.existingTasks[taskIndex].taskContent =
+        taskContentController.text;
+    _taskDatabase.updateTaskDataBase();
+    // widget.taskDetails[0] = taskTitleController.text;
+    // widget.taskDetails[1] = taskContentController.text;
   }
 
   void loadTaskEdits() {
-    // for (int i = 0; i < _taskDatabase.existingTasks.length; i++) {
-    //   if (widget.idToEdit == _taskDatabase.existingTasks[i].id) {
-    //     taskIndex = i;
-    //     taskTitleController.text = _taskDatabase.existingTasks[i].taskTitle;
-    //     taskContentController.text = _taskDatabase.existingTasks[i].taskContent;
-    //     // selectedDate = DateFormat("hh:mm a dd-MM-yyyy").parse(_taskDatabase.existingTasks[i].taskDeadline);
-    //     selectedDate = _taskDatabase.existingTasks[i].taskDeadline;
-    //     selectedTime = TimeOfDay.fromDateTime(selectedDate);
+    for (int i = 0; i < _taskDatabase.existingTasks.length; i++) {
+      if (widget.idToEdit == _taskDatabase.existingTasks[i].id) {
+        taskIndex = i;
+        taskTitleController.text = _taskDatabase.existingTasks[i].taskTitle;
+        taskContentController.text = _taskDatabase.existingTasks[i].taskContent;
+        // selectedDate = DateFormat("hh:mm a dd-MM-yyyy").parse(_taskDatabase.existingTasks[i].taskDeadline);
+        selectedDate = _taskDatabase.existingTasks[i].taskDeadline;
+        selectedTime = TimeOfDay.fromDateTime(selectedDate);
 
-    //     break;
-    //   }
-    // }
-    taskTitleController.text = widget.taskDetails[0];
-    taskContentController.text = widget.taskDetails[1];
-    selectedDate =
-        DateFormat("hh:mm a dd-MM-yyyy").parse(widget.taskDetails[2]);
-    selectedTime = TimeOfDay.fromDateTime(selectedDate);
+        break;
+      }
+    }
+    // taskTitleController.text = widget.taskDetails[0];
+    // taskContentController.text = widget.taskDetails[1];
+    // selectedDate = DateFormat("hh:mm a dd-MM-yyyy").parse(widget.taskDetails[2]);
+    // selectedTime = TimeOfDay.fromDateTime(selectedDate);
   }
 }

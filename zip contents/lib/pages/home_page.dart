@@ -1,3 +1,5 @@
+import 'package:hive_flutter/hive_flutter.dart';
+import '../databases/task_database.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter/scheduler.dart';
 import 'package:syncfusion_flutter_calendar/calendar.dart';
@@ -11,13 +13,21 @@ class HomeScreen extends StatefulWidget {
 }
 
 class _HomeState extends State<HomeScreen> {
+  final _taskBox = Hive.box('boxForTasks');
+  final TaskDatabase _taskDatabase = TaskDatabase();
   final List<Appointment> _appointments = <Appointment>[];
   late AppointmentDataSource dataSource;
 
   @override
   void initState() {
+    if (_taskBox.get('TASKS') == null) {
+      _taskDatabase.createInitialTaskData();
+    } else {
+      _taskDatabase.loadTaskData();
+    }
+    _taskDatabase.updateTaskDataBase();
     super.initState();
-    dataSource = getCalendarDataSource();
+    dataSource = getCalendarDataSource(_taskDatabase);
   }
 
   @override
@@ -134,10 +144,15 @@ class _HomeState extends State<HomeScreen> {
         /// appointment at the selected date.
         final Appointment? occurrenceAppointment =
             dataSource.getOccurrenceAppointment(appointment, selectedDate!, '');
-        if ((DateTime(appointment.startTime.year, appointment.startTime.month,
-                    appointment.startTime.day) ==
-                DateTime(
-                    selectedDate.year, selectedDate.month, selectedDate.day)) ||
+        if ((appointment.endTime.isAfter(selectedDate)
+
+            // appointment.startTime.year == selectedDate.year &&
+            // appointment.startTime.day == selectedDate.day &&
+            // appointment.startTime.month == selectedDate.month
+
+            // DateTime(appointment.startTime.year, appointment.startTime.month, appointment.startTime.day) ==
+            // DateTime(selectedDate.year, selectedDate.month, selectedDate.day)
+            ) ||
             occurrenceAppointment != null) {
           setState(() {
             _appointments.add(appointment);
@@ -148,59 +163,76 @@ class _HomeState extends State<HomeScreen> {
   }
 }
 
-AppointmentDataSource getCalendarDataSource() {
+AppointmentDataSource getCalendarDataSource(TaskDatabase _taskDatabase) {
   List<Appointment> appointments = <Appointment>[];
 
-  appointments.add(Appointment(
-    startTime: DateTime.now(),
-    endTime: DateTime.now().add(const Duration(minutes: 10)),
-    subject: 'Meeting',
-    color: Colors.blue,
-    startTimeZone: '',
-    endTimeZone: '',
-  ));
+  for (int j = 0; j < _taskDatabase.existingTasks.length; j++) {
+    if (!_taskDatabase.existingTasks[j].isDone) {
+      appointments.add(Appointment(
+        startTime: DateTime.now(),
+        endTime: _taskDatabase.existingTasks[j].taskDeadline,
+        subject: _taskDatabase.existingTasks[j].taskTitle,
+        color: Colors.red,
+      ));
+    }
+  }
 
-  appointments.add(Appointment(
-      startTime: DateTime.now().add(const Duration(days: -1)),
-      endTime: DateTime.now().add(const Duration(hours: 1)),
-      subject: 'Recurrence',
-      color: Colors.red,
-      recurrenceRule: 'FREQ=DAILY;INTERVAL=2;COUNT=10'));
+  // appointments.add(Appointment(
+  //   startTime: DateTime.now(),
+  //   endTime: DateTime.now().add(const Duration(days: 3)),
+  //   subject: 'Meeting',
+  //   color: const Color.fromARGB(200, 140, 230, 1),
+  // ));
+  // appointments.add(Appointment(
+  //   startTime: DateTime.now(),
+  //   endTime: DateTime.now().add(const Duration(minutes: 10)),
+  //   subject: 'Meeting',
+  //   color: Colors.blue,
+  //   startTimeZone: '',
+  //   endTimeZone: '',
+  // ));
 
-  appointments.add(Appointment(
-      startTime: DateTime.now().add(const Duration(hours: 4, days: -1)),
-      endTime: DateTime.now().add(const Duration(hours: 5, days: -1)),
-      subject: 'Release Meeting',
-      color: Colors.lightBlueAccent,
-      isAllDay: true));
+  // appointments.add(Appointment(
+  //     startTime: DateTime.now().add(const Duration(days: -1)),
+  //     endTime: DateTime.now().add(const Duration(hours: 1)),
+  //     subject: 'Recurrence',
+  //     color: Colors.red,
+  //     recurrenceRule: 'FREQ=DAILY;INTERVAL=2;COUNT=10'));
 
-  appointments.add(Appointment(
-    startTime: DateTime.now(),
-    endTime: DateTime.now().add(const Duration(hours: 1)),
-    subject: 'Meeting',
-    color: const Color.fromARGB(200, 140, 230, 1),
-  ));
+  // appointments.add(Appointment(
+  //     startTime: DateTime.now().add(const Duration(hours: 4, days: -1)),
+  //     endTime: DateTime.now().add(const Duration(hours: 5, days: -1)),
+  //     subject: 'Release Meeting',
+  //     color: Colors.lightBlueAccent,
+  //     isAllDay: true));
 
-  appointments.add(Appointment(
-    startTime: DateTime.now(),
-    endTime: DateTime.now().add(const Duration(hours: 2)),
-    subject: 'Meeting',
-    color: const Color.fromARGB(200, 140, 230, 1),
-  ));
+  // appointments.add(Appointment(
+  //   startTime: DateTime.now(),
+  //   endTime: DateTime.now().add(const Duration(hours: 1)),
+  //   subject: 'Meeting',
+  //   color: const Color.fromARGB(200, 140, 230, 1),
+  // ));
 
-  appointments.add(Appointment(
-    startTime: DateTime.now(),
-    endTime: DateTime.now().add(const Duration(hours: 3)),
-    subject: 'Meeting',
-    color: const Color.fromARGB(200, 140, 230, 1),
-  ));
+  // appointments.add(Appointment(
+  //   startTime: DateTime.now(),
+  //   endTime: DateTime.now().add(const Duration(hours: 2)),
+  //   subject: 'Meeting',
+  //   color: const Color.fromARGB(200, 140, 230, 1),
+  // ));
 
-  appointments.add(Appointment(
-    startTime: DateTime.now().add(const Duration(days: -2, hours: 4)),
-    endTime: DateTime.now().add(const Duration(days: -2, hours: 5)),
-    subject: 'Development Meeting   New York, U.S.A',
-    color: const Color.fromARGB(255, 249, 146, 12),
-  ));
+  // appointments.add(Appointment(
+  //   startTime: DateTime.now(),
+  //   endTime: DateTime.now().add(const Duration(hours: 3)),
+  //   subject: 'Meeting',
+  //   color: const Color.fromARGB(200, 140, 230, 1),
+  // ));
+
+  // appointments.add(Appointment(
+  //   startTime: DateTime.now().add(const Duration(days: -2, hours: 4)),
+  //   endTime: DateTime.now().add(const Duration(days: -2, hours: 5)),
+  //   subject: 'Development Meeting   New York, U.S.A',
+  //   color: const Color.fromARGB(255, 249, 146, 12),
+  // ));
 
   return AppointmentDataSource(appointments);
 }

@@ -2,6 +2,7 @@ import 'package:flutter/material.dart';
 import 'package:intl/intl.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../databases/task_database.dart';
+import '../main.dart' show Task;
 
 class TaskMakingScreen extends StatefulWidget {
   const TaskMakingScreen({super.key});
@@ -11,8 +12,8 @@ class TaskMakingScreen extends StatefulWidget {
 }
 
 class _TaskMakingScreenState extends State<TaskMakingScreen> {
-  // final _taskBox = Hive.box('boxForTasks');
-  // final TaskDatabase _taskDatabase = TaskDatabase();
+  final _taskBox = Hive.box('boxForTasks');
+  final TaskDatabase _taskDatabase = TaskDatabase();
   TextEditingController taskTitleController = TextEditingController();
   TextEditingController taskContentController = TextEditingController();
   DateTime selectedDate = DateTime.now();
@@ -20,16 +21,16 @@ class _TaskMakingScreenState extends State<TaskMakingScreen> {
 
   Task newTask =
       Task(taskTitle: '', taskContent: '', taskDeadline: DateTime.now());
-  // @override
-  // void initState() {
-  //   if (_taskBox.get('TASKS') == null) {
-  //     _taskDatabase.createInitialTaskData();
-  //   } else {
-  //     _taskDatabase.loadTaskData();
-  //   }
-  //   _taskDatabase.updateTaskDataBase();
-  //   super.initState();
-  // }
+  @override
+  void initState() {
+    if (_taskBox.get('TASKS') == null) {
+      _taskDatabase.createInitialTaskData();
+    } else {
+      _taskDatabase.loadTaskData();
+    }
+    _taskDatabase.updateTaskDataBase();
+    super.initState();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -202,28 +203,29 @@ class _TaskMakingScreenState extends State<TaskMakingScreen> {
             );
           });
     } else {
-      List<String> taskData = [
-        newTask.taskTitle,
-        newTask.taskContent,
-        DateFormat("hh:mm a dd-MM-yyyy").format(newTask.taskDeadline),
-      ];
-      // _taskDatabase.setNewTask(newTask.taskTitle, newTask.taskContent, newTask.taskDeadline);
-      // _taskDatabase.updateTaskDataBase();
-      print(taskData);
-      Navigator.pop(context, taskData);
+      // List<String> taskData = [
+      //   newTask.taskTitle,
+      //   newTask.taskContent,
+      //   DateFormat("hh:mm a dd-MM-yyyy").format(newTask.taskDeadline),
+      // ];
+      _taskDatabase.setNewTask(
+          newTask.taskTitle, newTask.taskContent, newTask.taskDeadline);
+      _taskDatabase.updateTaskDataBase();
+      // print(taskData);
+      Navigator.pop(context);
     }
   }
 }
 
-class Task {
-  String taskTitle;
-  String taskContent;
-  DateTime taskDeadline;
-  bool isDone = false;
+// class Task {
+//   String taskTitle;
+//   String taskContent;
+//   DateTime taskDeadline;
+//   bool isDone = false;
 
-  Task(
-      {required this.taskTitle,
-      required this.taskContent,
-      required this.taskDeadline,
-      this.isDone = false});
-}
+//   Task(
+//       {required this.taskTitle,
+//       required this.taskContent,
+//       required this.taskDeadline,
+//       this.isDone = false});
+// }

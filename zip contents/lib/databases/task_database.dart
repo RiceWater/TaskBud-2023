@@ -5,9 +5,10 @@ import '../main.dart';
 class TaskDatabase {
   final _taskBox = Hive.box('boxForTasks');
   List<Task> existingTasks = [];
-  List<Task> existingTodayTasks = [];
-  List<Task> existingNextWeekTasks =
-      []; //dont mind me just wanna try something hahaha
+  // List<Task> todayTasks = [];
+  // List<Task> nextWeekTasks = []; //dont mind me just wanna try something hahaha
+
+  // List<Task> existingTodayTask = [];
 
   void createInitialTaskData() {
     existingTasks = [
@@ -54,6 +55,10 @@ class TaskDatabase {
     _taskBox.deleteAt(index);
   }
 
+  void toggleTaskIsDone(int index) {
+    existingTasks[index].isDone = !existingTasks[index].isDone;
+  }
+
   List<String> provideTaskDetails(i) {
     List<String> taskDetails = [
       existingTasks[i].taskTitle,
@@ -68,32 +73,32 @@ class TaskDatabase {
   // List<dynamic> getTodayTasks() {
   //   return todayTasks;
   // }
+  //
+  int getIndex(Task thistask) {
+    int index = 0;
 
-  //Get the tasks due today and not complete
-  void initializeTodayTasks() {
-    existingTodayTasks.clear();
-    DateTime today = DateTime.now();
-    for (var i in existingTasks) {
-      if (i.taskDeadline.year == today.year &&
-          i.taskDeadline.month == today.month &&
-          i.taskDeadline.day == today.day &&
-          i.isDone == false) {
-        existingTodayTasks.add(i);
+    for (var task in existingTasks) {
+      if (task.taskDeadline.year == thistask.taskDeadline.year &&
+          task.taskDeadline.month == thistask.taskDeadline.month &&
+          task.taskDeadline.day == thistask.taskDeadline.day &&
+          task.taskDeadline.hour == thistask.taskDeadline.hour) {
+        return index;
       }
+      index++;
     }
+    return index;
   }
 
-  // //Get the tasks due today and not complete
-  // List<Task> get todayTasks {
-  //   DateTime today = DateTime.now();
-  //   return existingTasks
-  //       .where((task) =>
-  //           task.taskDeadline.year == today.year &&
-  //           task.taskDeadline.month == today.month &&
-  //           task.taskDeadline.day == today.day &&
-  //           task.isDone == false)
-  //       .toList();
-  // }
+  List<Task> get todayTasks {
+    DateTime today = DateTime.now();
+    return existingTasks
+        .where((task) =>
+            task.taskDeadline.year == today.year &&
+            task.taskDeadline.month == today.month &&
+            task.taskDeadline.day == today.day &&
+            task.isDone == false)
+        .toList();
+  }
 
   // Get the tasks due next week and not complete
   List<Task> get nextWeekTasks {

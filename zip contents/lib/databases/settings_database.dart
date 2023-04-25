@@ -1,24 +1,35 @@
 import 'package:hive_flutter/hive_flutter.dart';
-import '../main.dart';
+import '../main.dart' show SettingsContent;
 
 class SettingsDatabase {
   final _settingsBox = Hive.box('boxForSettings');
-  String accountName = '';
-  String accountEmail = '';
 
-  bool enableDarkTheme = false, enableAppBuddy = false;
-  void createInitialSettingsData() {}
+  SettingsContent sContent = SettingsContent(
+    currentEmail: 'big-D@gmail.com',
+    displayName: 'Biggus Dikus',
+  );
 
-  void loadSettingsData() {}
+  void createInitialSettingsData() {
+    sContent.enableDarkTheme = false;
+    sContent.enableAppBuddy = true;
+    sContent.displayName = 'Biggus Dikus';
+    sContent.currentEmail = 'big-D@gmail.com';
+    sContent.enableVibration = true;
+  }
 
-  void updateSettingsDataBase() {}
+  void loadSettingsData() {
+    sContent = _settingsBox.get('SETTINGS');
+  }
+
+  void updateSettingsDataBase() {
+    _settingsBox.put('SETTINGS', sContent);
+  }
 }
 
 /*
 Account with name and pfp with triple dot
-  - change name
-  - show email
-  - sign out
+  - change name (Done) 
+  - show email (Done)
   - delete account
 
 Sync
@@ -30,7 +41,7 @@ General
     - Change alarm sound
     - Enable/disable vibration
 
-FAQ
+FAQ (To be moved by the app budy icon)
 Feedback
   - rate the app
   - contact developers
@@ -38,4 +49,6 @@ About App
   - Ver No
   - Dev Info
   - Features
+
+Sign Out
 */

@@ -1,6 +1,8 @@
 import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
+import 'package:flutter/cupertino.dart';
+import '/databases/settings_database.dart';
 
 import 'pages/home_page.dart';
 import 'pages/notes_page.dart';
@@ -16,18 +18,22 @@ void main() async {
   await Hive.initFlutter();
   Hive.registerAdapter(NoteAdapter());
   Hive.registerAdapter(TaskAdapter());
+  Hive.registerAdapter(SettingsContentAdapter());
   await Hive.openBox('boxForTags');
   await Hive.openBox('boxForNotes');
   await Hive.openBox('boxForTasks');
+  await Hive.openBox('boxForSettings');
 
   //====================================
   //To reset when debugging/testing
   final _tagBox = Hive.box('boxForTags');
   final _noteBox = Hive.box('boxForNotes');
   final _taskBox = Hive.box('boxForTasks');
+  final _settingsBox = Hive.box('boxForSettings');
   _tagBox.clear();
   _noteBox.clear();
   _taskBox.clear();
+  _settingsBox.clear();
   //====================================
 
   runApp(const MyApp());
@@ -61,6 +67,20 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   int _selectedIndex = 0;
   String screenName = "Home";
+  late Icon currentIcon; // = Icon(Icons.home_outlined)
+  final _settingsBox = Hive.box('boxForSettings');
+  final _settingsDatabase = SettingsDatabase();
+
+  @override
+  void initState() {
+    super.initState();
+    if (_settingsBox.get('SETTINGS') == null) {
+      _settingsDatabase.createInitialSettingsData();
+    } else {
+      _settingsDatabase.loadSettingsData();
+    }
+    _settingsDatabase.updateSettingsDataBase();
+  }
 
   @override
   Widget build(BuildContext context) {
@@ -68,18 +88,26 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (_selectedIndex) {
       case 0:
         screenName = "Home";
+        currentIcon = const Icon(Icons.home,
+            size: 40); //const Icon(CupertinoIcons.house_fill, size: 40);
         page = const HomeScreen();
         break;
       case 1:
         screenName = "Notes";
+        currentIcon = const Icon(CupertinoIcons.pencil_circle_fill,
+            size:
+                37); //const Icon(CupertinoIcons.alarm_fill, size: 40);//const Icon(Icons.note_add_rounded, size: 39);
         page = const NoteScreen();
         break;
       case 2:
         screenName = "Tasks";
+        currentIcon = const Icon(CupertinoIcons.alarm_fill, size: 37);
         page = const TaskScreen();
         break;
       case 3:
         screenName = "Settings";
+        currentIcon = const Icon(CupertinoIcons.gear_solid,
+            size: 37); //const Icon(Icons.settings, size: 40);
         page = const SettingsScreen();
         break;
       default:
@@ -88,21 +116,26 @@ class _MyHomePageState extends State<MyHomePage> {
     }
 
     return SafeArea(
-      child: Scaffold(
-        appBar: AppBar(
-          elevation: 0,
-          backgroundColor: Colors.white,
-          foregroundColor: Colors.black,
-          title: Row(
-              mainAxisAlignment: MainAxisAlignment.start,
-              children: <Widget>[
-                const Icon(Icons.access_alarms_sharp, size: 40),
-                const Padding(padding: EdgeInsets.all(5)),
-                Text(screenName),
-              ]),
+      child: Theme(
+        data: (_settingsDatabase.sContent.enableDarkTheme)
+            ? ThemeData.dark()
+            : ThemeData.light(),
+        child: Scaffold(
+          appBar: AppBar(
+            elevation: 0,
+            //backgroundColor: Colors.white,
+            //foregroundColor: Colors.black,
+            title: Row(
+                mainAxisAlignment: MainAxisAlignment.start,
+                children: <Widget>[
+                  currentIcon,
+                  const Padding(padding: EdgeInsets.all(5)),
+                  Text(screenName),
+                ]),
+          ),
+          body: Center(child: page),
+          bottomNavigationBar: appNavBar(),
         ),
-        body: Center(child: page),
-        bottomNavigationBar: appNavBar(),
       ),
     );
   }
@@ -121,22 +154,23 @@ class _MyHomePageState extends State<MyHomePage> {
       },
       items: const [
         BottomNavigationBarItem(
-          icon: Icon(Icons.home_outlined),
+          icon: Icon(Icons.home),
           label: 'Home',
           //backgroundColor: Colors.blue,
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.note_add_rounded),
+          icon: Icon(CupertinoIcons
+              .pencil_circle_fill), //Icon(Icons.note_add_rounded),
           label: 'Notes',
           //backgroundColor: Color(0xff00335d),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.alarm),
+          icon: Icon(CupertinoIcons.alarm_fill), //Icon(Icons.alarm),
           label: 'Tasks',
           //backgroundColor: Color(0xff374755),
         ),
         BottomNavigationBarItem(
-          icon: Icon(Icons.settings),
+          icon: Icon(CupertinoIcons.gear_solid), //Icon(Icons.settings),
           label: 'Settings',
           //backgroundColor: Color(0xff777777),
         ),
@@ -232,5 +266,49 @@ class TaskAdapter extends TypeAdapter<Task> {
     writer.write(obj.taskContent);
     writer.write(obj.taskDeadline);
     writer.write(obj.isDone);
+  }
+}
+
+class SettingsContent {
+  bool enableDarkTheme = false, enableAppBuddy = true;
+  String displayName = ''; //To change to email after google and firebase
+  String currentEmail = '';
+  bool enableVibration = true;
+
+  SettingsContent({
+    this.enableDarkTheme = false,
+    this.enableAppBuddy = true,
+    this.displayName = '',
+    this.currentEmail = '',
+    this.enableVibration = true,
+  });
+}
+
+class SettingsContentAdapter extends TypeAdapter<SettingsContent> {
+  @override
+  final typeId = 42; //each adapter must have unique typeId (0 - 200)
+
+  @override
+  SettingsContent read(BinaryReader reader) {
+    final enableDarkTheme = reader.read() as bool;
+    final enableAppBuddy = reader.read() as bool;
+    final displayName = reader.read() as String;
+    final currentEmail = reader.read() as String;
+    final enableVibration = reader.read() as bool;
+    return SettingsContent(
+        enableDarkTheme: enableDarkTheme,
+        enableAppBuddy: enableAppBuddy,
+        displayName: displayName,
+        currentEmail: currentEmail,
+        enableVibration: enableVibration);
+  }
+
+  @override
+  void write(BinaryWriter writer, SettingsContent obj) {
+    writer.write(obj.enableDarkTheme);
+    writer.write(obj.enableAppBuddy);
+    writer.write(obj.displayName);
+    writer.write(obj.currentEmail);
+    writer.write(obj.enableVibration);
   }
 }

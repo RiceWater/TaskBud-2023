@@ -51,78 +51,87 @@ class _SettingsFeedbackScreenState extends State<SettingsFeedbackScreen> {
                 ],
               ),
             ),
-            body: Align(
-              alignment: Alignment.center,
-              child: SingleChildScrollView(
-                child: SizedBox(
-                  width: MediaQuery.of(context).size.width * 90 / 100,
-                  child: Column(
-                    children: [
-                      TextField(
-                        readOnly: true,
-                        controller: _displayEmailController,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                        decoration: const InputDecoration(
-                          enabledBorder: InputBorder.none,
-                        ),
-                      ),
-                      TextField(
-                        controller: _subjectController,
-                        style: const TextStyle(fontWeight: FontWeight.bold),
-                        decoration: const InputDecoration(
-                          enabledBorder: InputBorder.none,
-                          hintText: "Subject",
-                        ),
-                      ),
-                      TextField(
-                        controller: _bodyController,
-                        minLines: (MediaQuery.of(context).size.height.round() /
-                                    100 *
-                                    3)
-                                .toInt() -
-                            4,
-                        maxLines: (MediaQuery.of(context).size.height.round() /
-                                    100 *
-                                    3)
-                                .toInt() -
-                            4,
-                        decoration: const InputDecoration(
-                          enabledBorder: InputBorder.none,
-                          hintText: "Put your feedback here",
-                        ),
-                      ),
-                      const Padding(padding: EdgeInsets.all(10)),
-                      OutlinedButton(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 90 / 100,
-                            height: 40,
-                            child: const Center(
-                              child: Text(
-                                'Send Feedback',
-                                style: TextStyle(fontSize: 16),
-                                textAlign: TextAlign.center,
-                              ),
+            body: Column(
+              children: [
+                Center(
+                  child: SingleChildScrollView(
+                    child: SizedBox(
+                      width: MediaQuery.of(context).size.width * 90 / 100,
+                      child: Column(
+                        children: [
+                          TextField(
+                            readOnly: true,
+                            controller: _displayEmailController,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            decoration: const InputDecoration(
+                              enabledBorder: InputBorder.none,
                             ),
                           ),
-                          onPressed: () {}),
-                      const Padding(padding: EdgeInsets.all(5)),
-                      OutlinedButton(
-                          child: SizedBox(
-                            width: MediaQuery.of(context).size.width * 90 / 100,
-                            height: 40,
-                            child: const Center(
-                              child: Text(
-                                'Rate on App Store',
-                                style: TextStyle(fontSize: 16),
-                                textAlign: TextAlign.center,
-                              ),
+                          TextField(
+                            controller: _subjectController,
+                            style: const TextStyle(fontWeight: FontWeight.bold),
+                            decoration: const InputDecoration(
+                              enabledBorder: InputBorder.none,
+                              hintText: "Subject",
                             ),
                           ),
-                          onPressed: () {}),
-                    ],
+                          TextField(
+                            controller: _bodyController,
+                            minLines:
+                                (MediaQuery.of(context).size.height.round() /
+                                            100 *
+                                            3)
+                                        .toInt() -
+                                    4,
+                            maxLines:
+                                (MediaQuery.of(context).size.height.round() /
+                                            100 *
+                                            3)
+                                        .toInt() -
+                                    4,
+                            decoration: const InputDecoration(
+                              enabledBorder: InputBorder.none,
+                              hintText: "Put your feedback here",
+                            ),
+                          ),
+                          const Padding(padding: EdgeInsets.all(10)),
+                          OutlinedButton(
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width *
+                                    90 /
+                                    100,
+                                height: 40,
+                                child: const Center(
+                                  child: Text(
+                                    'Send Feedback',
+                                    style: TextStyle(fontSize: 16),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {}),
+                          const Padding(padding: EdgeInsets.all(5)),
+                          OutlinedButton(
+                              child: SizedBox(
+                                width: MediaQuery.of(context).size.width *
+                                    90 /
+                                    100,
+                                height: 40,
+                                child: const Center(
+                                  child: Text(
+                                    'Rate on App Store',
+                                    style: TextStyle(fontSize: 16),
+                                    textAlign: TextAlign.center,
+                                  ),
+                                ),
+                              ),
+                              onPressed: () {}),
+                        ],
+                      ),
+                    ),
                   ),
                 ),
-              ),
+              ],
             )));
   }
 }

@@ -9,6 +9,7 @@ import 'pages/notes_page.dart';
 import 'pages/tasks_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/splash_page.dart';
+import 'pages/app-buddy_faq_page.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(
@@ -88,29 +89,22 @@ class _MyHomePageState extends State<MyHomePage> {
     switch (_selectedIndex) {
       case 0:
         screenName = "Home";
-        currentIcon = const Icon(Icons.home,
-            size: 40); //const Icon(CupertinoIcons.house_fill, size: 40);
         page = const HomeScreen();
         break;
       case 1:
         screenName = "Notes";
-        currentIcon = const Icon(CupertinoIcons.pencil_circle_fill,
-            size:
-                37); //const Icon(CupertinoIcons.alarm_fill, size: 40);//const Icon(Icons.note_add_rounded, size: 39);
         page = const NoteScreen();
         break;
       case 2:
         screenName = "Tasks";
-        currentIcon = const Icon(CupertinoIcons.alarm_fill, size: 37);
         page = const TaskScreen();
         break;
       case 3:
         screenName = "Settings";
-        currentIcon = const Icon(CupertinoIcons.gear_solid,
-            size: 37); //const Icon(Icons.settings, size: 40);
         page = const SettingsScreen();
         break;
       default:
+        screenName = "Home";
         page = const HomeScreen();
         break;
     }
@@ -128,7 +122,16 @@ class _MyHomePageState extends State<MyHomePage> {
             title: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
                 children: <Widget>[
-                  currentIcon,
+                  IconButton(
+                      onPressed: () {
+                        _awaitReturnFromAppBuddyFAQScreen(context);
+                      },
+                      icon: const ImageIcon(
+                        AssetImage('assets/images/taskbud_filled.png'),
+                        //size: 40,
+                      ),
+                      iconSize: 40),
+                  //currentIcon,
                   const Padding(padding: EdgeInsets.all(5)),
                   Text(screenName),
                 ]),
@@ -143,7 +146,9 @@ class _MyHomePageState extends State<MyHomePage> {
   BottomNavigationBar appNavBar() {
     return BottomNavigationBar(
       type: BottomNavigationBarType.shifting, // Shifting
-      selectedItemColor: Colors.black,
+      selectedItemColor: (_settingsDatabase.sContent.enableDarkTheme)
+          ? Colors.white
+          : Colors.black,
       unselectedItemColor: Colors.grey,
 
       currentIndex: _selectedIndex,
@@ -176,6 +181,14 @@ class _MyHomePageState extends State<MyHomePage> {
         ),
       ],
     );
+  }
+
+  void _awaitReturnFromAppBuddyFAQScreen(BuildContext context) async {
+    await Navigator.push(
+        context,
+        MaterialPageRoute(
+          builder: (context) => const AppBuddyFAQScreen(),
+        ));
   }
 }
 

@@ -5,7 +5,6 @@ import '/databases/settings_database.dart';
 
 import '/pages/settings_related/settings_sounds_page.dart';
 import '/pages/settings_related/settings_account_page.dart';
-import '/pages/settings_related/settings_faq_page.dart';
 import '/pages/settings_related/settings_feedback_page.dart';
 import '/pages/settings_related/settings_about-app_page.dart';
 
@@ -155,14 +154,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
                 ),
                 const Divider(),
                 ListTile(
-                  leading: const Icon(Icons.question_answer),
-                  horizontalTitleGap: 0,
-                  title: const Text('FAQ'),
-                  onTap: () {
-                    _awaitReturnFromSettingRelatedScreen(context, 3);
-                  },
-                ),
-                ListTile(
                   leading: const Icon(Icons.feedback),
                   horizontalTitleGap: 0,
                   title: const Text('Feedback'),
@@ -219,13 +210,6 @@ class _SettingsScreenState extends State<SettingsScreen> {
             context,
             MaterialPageRoute(
               builder: (context) => const SettingsSoundsScreen(),
-            ));
-        break;
-      case 3:
-        await Navigator.push(
-            context,
-            MaterialPageRoute(
-              builder: (context) => const SettingsFAQScreen(),
             ));
         break;
       case 4:

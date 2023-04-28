@@ -27,6 +27,8 @@ dependencies:
   hive: ^2.2.3
   hive_flutter: ^1.1.0
   hive_generator: ^2.0.0
+  path_provider_android: 2.0.23
+  shared_preferences_android: 2.0.16
 
 dependency_overrides:
  syncfusion_flutter_calendar: 20.3.61

@@ -1,4 +1,6 @@
 import 'package:flutter/material.dart';
+
+import '../main.dart' show Note;
 import 'tag_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '../databases/note_database.dart';
@@ -167,13 +169,4 @@ class _NoteMakingScreenState extends State<NoteMakingScreen> {
       tagName = result ?? 'No Tag';
     });
   }
-}
-
-class Note {
-  String noteTitle, noteContent, tagName;
-
-  Note(
-      {required this.noteTitle,
-      required this.noteContent,
-      required this.tagName});
 }

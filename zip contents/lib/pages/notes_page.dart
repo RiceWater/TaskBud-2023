@@ -1,6 +1,6 @@
-import 'dart:math';
-
 import 'package:flutter/material.dart'; //a
+
+import '../main.dart' show Note;
 import 'note_making_page.dart';
 import 'note_editing_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -152,22 +152,11 @@ class _NoteScreenState extends State<NoteScreen> {
       notesWithSameTag = [];
 
       for (int j = 0; j < _noteDatabase.existingNotes.length; j++) {
-        List<String> noteDetailsFromDatabase =
-            _noteDatabase.provideNoteDetails(j);
-        Note noteFromDatabase = Note(
-            noteTitle: noteDetailsFromDatabase[0],
-            noteContent: noteDetailsFromDatabase[1],
-            tagName: noteDetailsFromDatabase[2],
-            id: int.parse(noteDetailsFromDatabase[3]));
-
-        if (i.tagName == noteFromDatabase.tagName) {
-          Note tmp = Note(
-              noteTitle: noteFromDatabase.noteTitle,
-              noteContent: noteFromDatabase.noteContent,
-              tagName: noteFromDatabase.tagName,
-              id: noteFromDatabase.id);
-
-          notesWithSameTag = [...notesWithSameTag, tmp];
+        if (i.tagName == _noteDatabase.existingNotes[j].tagName) {
+          notesWithSameTag = [
+            ...notesWithSameTag,
+            _noteDatabase.existingNotes[j]
+          ];
           totalTagCount++;
         }
       }
@@ -215,29 +204,12 @@ class _NoteScreenState extends State<NoteScreen> {
     if (noteDetails.tagName == deleteValue &&
         noteDetails.noteContent == deleteValue &&
         noteDetails.noteTitle == deleteValue) {
-      // for (var i in _noteDatabase.existingNotes) {
-      //   if (i.id == noteDetails.id) {
-      //     _noteDatabase.existingNotes.remove(i);
-      //     _noteDatabase.updateNoteDataBase();
-      //   }
-      // }
       _noteDatabase.removeNote(noteDetails.id);
     }
     setState(() {
       initializeExpansionTags();
     });
   }
-}
-
-class Note {
-  String noteTitle, noteContent, tagName;
-  int id;
-
-  Note(
-      {required this.noteTitle,
-      required this.noteContent,
-      required this.tagName,
-      required this.id});
 }
 
 class ExpansionTagContent {

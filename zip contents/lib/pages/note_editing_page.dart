@@ -172,7 +172,8 @@ class _NoteEditingScreenState extends State<NoteEditingScreen> {
 
   void saveNoteEdits() {
     _noteDatabase.existingNotes[noteIndex].noteTitle = noteTitleController.text;
-    _noteDatabase.existingNotes[noteIndex].noteContent = noteContentController.text;
+    _noteDatabase.existingNotes[noteIndex].noteContent =
+        noteContentController.text;
     _noteDatabase.existingNotes[noteIndex].tagName = tagName;
     _noteDatabase.updateNoteDataBase();
   }

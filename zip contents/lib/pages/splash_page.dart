@@ -4,7 +4,7 @@ import 'dart:async';
 import '../main.dart';
 
 class SplashScreen extends StatefulWidget {
-  SplashScreen({super.key});
+  const SplashScreen({super.key});
 
   @override
   _SplashScreenState createState() => _SplashScreenState();
@@ -32,33 +32,39 @@ class _SplashScreenState extends State<SplashScreen> {
           gradient: LinearGradient(
         begin: Alignment.bottomCenter,
         end: Alignment.topLeft,
-        colors: [Color(0xffcca6e6), Color(0xff2a87ff)],
+        colors: [Color(0xff00b3b3), Color(0xff00b3b3)],
       )),
-      child: Column(
-        crossAxisAlignment: CrossAxisAlignment.center,
-        mainAxisAlignment: MainAxisAlignment.spaceAround,
-        children: [
-          Column(
-            children: [
-              Image.asset(
-                'assets/images/firefox.png',
-                height: 100,
-                width: 150,
-              ),
-              const Text(
-                "TaskBud",
-                textAlign: TextAlign.center,
-                style: TextStyle(
-                  color: Colors.white,
-                  fontWeight: FontWeight.bold,
-                  fontSize: 24,
-                ),
-              ),
-            ],
-          ),
-          const CircularProgressIndicator(),
-        ],
-      ),
+      child: Center(
+          child: Image.asset(
+        'assets/images/TaskBud_logo.png',
+        height: 120,
+        width: 120,
+      )),
+      // Column(
+      //   crossAxisAlignment: CrossAxisAlignment.center,
+      //   mainAxisAlignment: MainAxisAlignment.spaceAround,
+      //   children: [
+      //     Column(
+      //       children: [
+      //         Image.asset(
+      //           'assets/images/TaskBud_logo.png',
+      //           height: 100,
+      //           width: 150,
+      //         ),
+      //         const Text(
+      //           "TaskBud",
+      //           textAlign: TextAlign.center,
+      //           style: TextStyle(
+      //             color: Colors.white,
+      //             fontWeight: FontWeight.bold,
+      //             fontSize: 24,
+      //           ),
+      //         ),
+      //       ],
+      //     ),
+      //     const CircularProgressIndicator(),
+      //   ],
+      // ),
     ));
   }
 }

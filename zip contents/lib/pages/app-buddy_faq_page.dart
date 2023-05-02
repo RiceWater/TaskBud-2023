@@ -14,23 +14,24 @@ class _AppBuddyFAQScreenState extends State<AppBuddyFAQScreen> {
     FAQItem(
         headerContent: "What are the benefits of using this app?",
         expandedContent:
-            "There are a lot of benefits, but generally, you can increase your productivity and focus, plan your day better, and feel more accountable with what you do."),
+            "Our notetaking and task-making app has numerous benefits. Firstly, it allows you to organize and prioritize your tasks and notes, which helps you stay on top of your work and increase productivity. Secondly, you can set reminders for important tasks or notes, ensuring that you never miss a deadline or forget an essential piece of information. Additionally, our app has a user-friendly interface that makes it easy to use and navigate, even for those who are not tech-savvy. Overall, our app is an excellent tool for anyone looking to enhance their productivity and streamline their workflow."),
     FAQItem(
         headerContent: "How do you handle user data?",
         expandedContent:
-            "Currently, your data will used for backups in case it was deleted locally or if you are signing in with another device."),
+            " We take user privacy very seriously, and we do not collect any user data. Our app does not require any personal information or login credentials, ensuring that your privacy remains intact. We understand the importance of data security, and we use industry-standard encryption techniques to protect user data, which in this case, is none."),
     FAQItem(
         headerContent:
             "How long does it take to receive a response from customer support?",
         expandedContent:
-            "Since this is made by a small team, you'll be receiving a response within a week."),
+            "We strive to provide our customers with the best possible service and support. Our customer support team aims to available 24/7 to answer any questions or concerns you may have. We aim to respond to all queries as soon as possible. However, due to the size of the team, we ask for patience. But would not ask for more than a week."),
     FAQItem(
         headerContent: "What forms of payment do you accept?",
         expandedContent:
-            "As of now, we are not accepting any payment of any kind. If we will, it might be in a form of a donation."),
+            "We do not accept payments for our app, as it is currently free to use. However, if you would like to support our development efforts, we accept donations of any amount. In the future, we may introduce premium features that may require payment, but we will ensure that our app remains accessible and affordable for all users. Thank you for considering supporting our app!"),
     FAQItem(
         headerContent: "Will this always be free?",
-        expandedContent: "Yes, it will!"),
+        expandedContent:
+            "We understand that many users appreciate the availability of free apps. As of now, our app is free to use, and we intend to keep it that way. However, we may introduce premium features in the future that may come with a cost. Nevertheless, we promise to keep our app accessible and affordable for all our users."),
   ];
 
   //https://api.flutter.dev/flutter/material/ExpansionPanelList-class.html

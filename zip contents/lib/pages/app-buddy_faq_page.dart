@@ -39,9 +39,10 @@ class _AppBuddyFAQScreenState extends State<AppBuddyFAQScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+            backgroundColor: const Color(0xffe3cc9c),
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: Colors.white,
+              backgroundColor: const Color(0xffe3cc9c),
               foregroundColor: Colors.black,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),
@@ -69,6 +70,7 @@ class _AppBuddyFAQScreenState extends State<AppBuddyFAQScreen> {
                     },
                     children: faqItems.map<ExpansionPanel>((FAQItem item) {
                       return ExpansionPanel(
+                        backgroundColor: const Color(0xffFEFBEA),
                         headerBuilder: (BuildContext context, bool isExpanded) {
                           return GestureDetector(
                             onTap: () {

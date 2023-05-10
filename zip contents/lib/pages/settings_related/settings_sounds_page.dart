@@ -33,9 +33,10 @@ class _SettingsSoundsScreenState extends State<SettingsSoundsScreen> {
           ? ThemeData.dark()
           : ThemeData.light(),
       child: Scaffold(
+        backgroundColor: Color(0xffFEFBEA),
         appBar: AppBar(
           elevation: 0,
-          //backgroundColor: Colors.white,
+          backgroundColor: Color(0xffe3cc9c),
           //foregroundColor: Colors.black,
           title: const Text('Sounds'),
         ),
@@ -81,7 +82,6 @@ class _SettingsSoundsScreenState extends State<SettingsSoundsScreen> {
                     title: const Text('Change Alarm Sound'),
                     onTap: () {
                       //_awaitReturnNoteFromNoteMakingScreen(context);
-                      print('pressed');
                     },
                   ),
                 ]),

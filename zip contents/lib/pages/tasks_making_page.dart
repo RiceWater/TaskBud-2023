@@ -36,9 +36,10 @@ class _TaskMakingScreenState extends State<TaskMakingScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+      backgroundColor: const Color(0xffFEFBEA),
       appBar: AppBar(
         elevation: 0,
-        backgroundColor: Colors.white,
+        backgroundColor: const Color(0xffe3cc9c),
         foregroundColor: Colors.black,
         title: Row(
           mainAxisAlignment: MainAxisAlignment.start,

@@ -2,7 +2,9 @@ import 'package:flutter/material.dart';
 import 'package:flutter/services.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import 'package:flutter/cupertino.dart';
+import 'package:notetaking/pages/log_in_page.dart';
 import '/databases/settings_database.dart';
+import '/databases/task_database.dart';
 
 import 'pages/home_page.dart';
 import 'pages/notes_page.dart';
@@ -10,12 +12,15 @@ import 'pages/tasks_page.dart';
 import 'pages/settings_page.dart';
 import 'pages/splash_page.dart';
 import 'pages/app-buddy_faq_page.dart';
+import 'services/notif_service.dart';
 
 void main() async {
   SystemChrome.setSystemUIOverlayStyle(
       const SystemUiOverlayStyle(statusBarColor: Colors.transparent));
 
   WidgetsFlutterBinding.ensureInitialized();
+  NotificationService().initNotification();
+
   await Hive.initFlutter();
   Hive.registerAdapter(NoteAdapter());
   Hive.registerAdapter(TaskAdapter());
@@ -48,11 +53,11 @@ class MyApp extends StatelessWidget {
     return MaterialApp(
       title: 'TaskBud',
       theme: ThemeData(
-        primarySwatch: Colors.blue,
+        primarySwatch: Colors.grey,
         colorScheme:
             ColorScheme.fromSwatch().copyWith(secondary: Colors.redAccent),
       ),
-      home: SplashScreen(),
+      home: const SplashScreen(),
     );
   }
 }
@@ -71,6 +76,8 @@ class _MyHomePageState extends State<MyHomePage> {
   late Icon currentIcon; // = Icon(Icons.home_outlined)
   final _settingsBox = Hive.box('boxForSettings');
   final _settingsDatabase = SettingsDatabase();
+  final _taskBox = Hive.box('boxForTasks');
+  final TaskDatabase _taskDatabase = TaskDatabase();
 
   @override
   void initState() {
@@ -81,6 +88,13 @@ class _MyHomePageState extends State<MyHomePage> {
       _settingsDatabase.loadSettingsData();
     }
     _settingsDatabase.updateSettingsDataBase();
+
+    if (_taskBox.get('TASKS') == null) {
+      _taskDatabase.createInitialTaskData();
+    } else {
+      _taskDatabase.loadTaskData();
+    }
+    _taskDatabase.updateTaskDataBase();
   }
 
   @override
@@ -108,7 +122,12 @@ class _MyHomePageState extends State<MyHomePage> {
         page = const HomeScreen();
         break;
     }
-
+    NotificationService nService = NotificationService();
+    String todTasks = '';
+    for (int i = 0; i < _taskDatabase.todayTasks.length; i++) {
+      todTasks += _taskDatabase.todayTasks[i].taskTitle + "\n";
+    }
+    nService.scheduleNotification('Today\'s Tasks', todTasks);
     return SafeArea(
       child: Theme(
         data: (_settingsDatabase.sContent.enableDarkTheme)
@@ -117,7 +136,7 @@ class _MyHomePageState extends State<MyHomePage> {
         child: Scaffold(
           appBar: AppBar(
             elevation: 0,
-            //backgroundColor: Colors.white,
+            backgroundColor: const Color(0xffe3cc9c), //upper bar
             //foregroundColor: Colors.black,
             title: Row(
                 mainAxisAlignment: MainAxisAlignment.start,
@@ -147,9 +166,9 @@ class _MyHomePageState extends State<MyHomePage> {
     return BottomNavigationBar(
       type: BottomNavigationBarType.shifting, // Shifting
       selectedItemColor: (_settingsDatabase.sContent.enableDarkTheme)
-          ? Colors.white
-          : Colors.black,
-      unselectedItemColor: Colors.grey,
+          ? const Color(0xff000000)
+          : const Color(0xff000000),
+      unselectedItemColor: const Color(0xffEFEFEF),
 
       currentIndex: _selectedIndex,
       onTap: (int index) {
@@ -161,22 +180,26 @@ class _MyHomePageState extends State<MyHomePage> {
         BottomNavigationBarItem(
           icon: Icon(Icons.home),
           label: 'Home',
+          backgroundColor: Color(0xffe3cc9c), //buttomnavbarCOLOR
           //backgroundColor: Colors.blue,
         ),
         BottomNavigationBarItem(
           icon: Icon(CupertinoIcons
               .pencil_circle_fill), //Icon(Icons.note_add_rounded),
           label: 'Notes',
+          backgroundColor: Color(0xffe3cc9c),
           //backgroundColor: Color(0xff00335d),
         ),
         BottomNavigationBarItem(
           icon: Icon(CupertinoIcons.alarm_fill), //Icon(Icons.alarm),
           label: 'Tasks',
+          backgroundColor: Color(0xffe3cc9c),
           //backgroundColor: Color(0xff374755),
         ),
         BottomNavigationBarItem(
           icon: Icon(CupertinoIcons.gear_solid), //Icon(Icons.settings),
           label: 'Settings',
+          backgroundColor: Color(0xffe3cc9c),
           //backgroundColor: Color(0xff777777),
         ),
       ],

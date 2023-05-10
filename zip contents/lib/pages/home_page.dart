@@ -33,94 +33,98 @@ class _HomeState extends State<HomeScreen> {
   @override
   Widget build(BuildContext context) {
     return Scaffold(
+        backgroundColor: Color(0xffe3cc9c),
         body: SingleChildScrollView(
-      child: Container(
-        width: 450,
-        padding: const EdgeInsets.all(5),
-        child: Column(
-          children: <Widget>[
-            Row(
-              mainAxisAlignment: MainAxisAlignment.center,
-              children: [
-                SizedBox(
-                  width: MediaQuery.of(context).size.width * 0.95,
-                  height: MediaQuery.of(context).size.height * 0.45,
-                  child: SfCalendar(
-                    view: CalendarView.month,
-                    dataSource: dataSource,
-                    onSelectionChanged: selectionChanged,
-                  ),
+          child: Container(
+            width: 450,
+            padding: const EdgeInsets.all(5),
+            child: Column(
+              children: <Widget>[
+                Row(
+                  mainAxisAlignment: MainAxisAlignment.center,
+                  children: [
+                    SizedBox(
+                      width: MediaQuery.of(context).size.width * 0.95,
+                      height: MediaQuery.of(context).size.height * 0.45,
+                      child: SfCalendar(
+                        view: CalendarView.month,
+                        backgroundColor: const Color(0xffFEFBEA),
+                        dataSource: dataSource,
+                        onSelectionChanged: selectionChanged,
+                      ),
+                    ),
+                  ],
                 ),
+                const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
+                Container(
+                    width: MediaQuery.of(context).size.width * 0.95,
+                    height: MediaQuery.of(context).size.height * 0.32,
+                    color: const Color(0xfffff4db),
+                    child: ListView.separated(
+                      padding: const EdgeInsets.all(2),
+                      itemCount: _appointments.length,
+                      itemBuilder: (BuildContext context, int index) {
+                        return Container(
+                            padding: const EdgeInsets.all(2),
+                            height: 70,
+                            color: _appointments[index].color,
+                            child: ListTile(
+                              leading: Column(
+                                mainAxisAlignment: MainAxisAlignment.center,
+                                children: <Widget>[
+                                  Expanded(
+                                    child: Text(
+                                      _appointments[index].isAllDay
+                                          ? ''
+                                          : DateFormat('hh:mm a').format(
+                                              _appointments[index].startTime),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.red,
+                                          height: 1.5),
+                                    ),
+                                  ),
+                                  Expanded(
+                                      child: Text(
+                                    _appointments[index].isAllDay
+                                        ? 'All day'
+                                        : '',
+                                    style: const TextStyle(
+                                        color: Colors.white,
+                                        height: 1.1,
+                                        fontWeight: FontWeight.w600),
+                                  )),
+                                  Expanded(
+                                    child: Text(
+                                      _appointments[index].isAllDay
+                                          ? ''
+                                          : DateFormat('hh:mm a').format(
+                                              _appointments[index].endTime),
+                                      textAlign: TextAlign.center,
+                                      style: const TextStyle(
+                                          fontWeight: FontWeight.w600,
+                                          color: Colors.white),
+                                    ),
+                                  ),
+                                ],
+                              ),
+                              title: Text(_appointments[index].subject,
+                                  textAlign: TextAlign.center,
+                                  style: const TextStyle(
+                                      fontWeight: FontWeight.w600,
+                                      color: Colors.white)),
+                            ));
+                      },
+                      separatorBuilder: (BuildContext context, int index) =>
+                          const Divider(
+                        height: 5,
+                      ),
+                    ))
               ],
             ),
-            const Padding(padding: EdgeInsets.fromLTRB(0, 10, 0, 0)),
-            Container(
-                width: MediaQuery.of(context).size.width * 0.95,
-                height: MediaQuery.of(context).size.height * 0.32,
-                color: Colors.black12,
-                child: ListView.separated(
-                  padding: const EdgeInsets.all(2),
-                  itemCount: _appointments.length,
-                  itemBuilder: (BuildContext context, int index) {
-                    return Container(
-                        padding: const EdgeInsets.all(2),
-                        height: 60,
-                        color: _appointments[index].color,
-                        child: ListTile(
-                          leading: Column(
-                            mainAxisAlignment: MainAxisAlignment.center,
-                            children: <Widget>[
-                              Expanded(
-                                child: Text(
-                                  _appointments[index].isAllDay
-                                      ? ''
-                                      : DateFormat('hh:mm a').format(
-                                          _appointments[index].startTime),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white,
-                                      height: 1.5),
-                                ),
-                              ),
-                              Expanded(
-                                  child: Text(
-                                _appointments[index].isAllDay ? 'All day' : '',
-                                style: const TextStyle(
-                                    color: Colors.white,
-                                    height: 1.1,
-                                    fontWeight: FontWeight.w600),
-                              )),
-                              Expanded(
-                                child: Text(
-                                  _appointments[index].isAllDay
-                                      ? ''
-                                      : DateFormat('hh:mm a')
-                                          .format(_appointments[index].endTime),
-                                  textAlign: TextAlign.center,
-                                  style: const TextStyle(
-                                      fontWeight: FontWeight.w600,
-                                      color: Colors.white),
-                                ),
-                              ),
-                            ],
-                          ),
-                          title: Text(_appointments[index].subject,
-                              textAlign: TextAlign.center,
-                              style: const TextStyle(
-                                  fontWeight: FontWeight.w600,
-                                  color: Colors.white)),
-                        ));
-                  },
-                  separatorBuilder: (BuildContext context, int index) =>
-                      const Divider(
-                    height: 5,
-                  ),
-                ))
-          ],
-        ),
-      ),
-    ));
+          ),
+        ));
   }
 
   void selectionChanged(CalendarSelectionDetails calendarSelectionDetails) {

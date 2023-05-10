@@ -1,7 +1,7 @@
-import 'package:flutter/cupertino.dart';
 import 'package:flutter/material.dart';
 import 'package:hive_flutter/hive_flutter.dart';
 import '/databases/settings_database.dart';
+import 'package:notetaking/pages/login.dart';
 
 import '/pages/settings_related/settings_sounds_page.dart';
 import '/pages/settings_related/settings_account_page.dart';
@@ -37,6 +37,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
     _settingsDatabase.loadSettingsData();
     return SafeArea(
         child: Scaffold(
+      backgroundColor: const Color(0xffe3cc9c),
       body: SingleChildScrollView(
           child: Column(
         children: <Widget>[
@@ -62,7 +63,7 @@ class _SettingsScreenState extends State<SettingsScreen> {
                     builder: (BuildContext context, StateSetter setState) {
                   return Text(
                     displayName,
-                    style: TextStyle(fontSize: 18),
+                    style: const TextStyle(fontSize: 18),
                   );
                 }),
               ],
@@ -89,15 +90,13 @@ class _SettingsScreenState extends State<SettingsScreen> {
                   leading: const Icon(Icons.sync),
                   horizontalTitleGap: 0,
                   title: const Text('Sync Data'),
-                  onTap: () {
-                    print('pressed');
-                  },
+                  onTap: () {},
                 ),
                 const Divider(),
                 ListTile(
-                  leading: Icon(
+                  leading: const Icon(
                       Icons.dark_mode), // Icon widget as the leading element
-                  title: Text('Dark Mode'),
+                  title: const Text('Dark Mode'),
                   horizontalTitleGap: 0, // Title of the ListTile
                   trailing: Switch(
                     value: _settingsDatabase
@@ -182,7 +181,10 @@ class _SettingsScreenState extends State<SettingsScreen> {
                         ),
                       ),
                     ),
-                    onPressed: () {}),
+                    onPressed: () {
+                      Navigator.push(context,
+                          MaterialPageRoute(builder: (context) => LoginPage()));
+                    }),
               ],
             ),
           ),

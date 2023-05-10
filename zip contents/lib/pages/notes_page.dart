@@ -1,6 +1,6 @@
-import 'package:flutter/material.dart'; //a
+import 'dart:math';
 
-import '../main.dart' show Note;
+import 'package:flutter/material.dart'; //a
 import 'note_making_page.dart';
 import 'note_editing_page.dart';
 import 'package:hive_flutter/hive_flutter.dart';
@@ -46,6 +46,7 @@ class _NoteScreenState extends State<NoteScreen> {
     //expansionTags.clear();
     initializeExpansionTags();
     return Scaffold(
+      backgroundColor: Color(0xffe3cc9c),
       body: SingleChildScrollView(
         child: ExpansionPanelList(
           expansionCallback: (int index, bool isExpanded) {
@@ -55,6 +56,7 @@ class _NoteScreenState extends State<NoteScreen> {
           },
           children: expansionTags.map((ExpansionTagContent item) {
             return ExpansionPanel(
+              backgroundColor: const Color(0xffFEFBEA),
               headerBuilder: (BuildContext context, bool isExpanded) {
                 return GestureDetector(
                   onTap: () {
@@ -92,6 +94,7 @@ class _NoteScreenState extends State<NoteScreen> {
         ),
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightGreen,
         child: const Icon(Icons.add),
         onPressed: () {
           _awaitReturnNoteFromNoteMakingScreen(context);
@@ -152,11 +155,22 @@ class _NoteScreenState extends State<NoteScreen> {
       notesWithSameTag = [];
 
       for (int j = 0; j < _noteDatabase.existingNotes.length; j++) {
-        if (i.tagName == _noteDatabase.existingNotes[j].tagName) {
-          notesWithSameTag = [
-            ...notesWithSameTag,
-            _noteDatabase.existingNotes[j]
-          ];
+        List<String> noteDetailsFromDatabase =
+            _noteDatabase.provideNoteDetails(j);
+        Note noteFromDatabase = Note(
+            noteTitle: noteDetailsFromDatabase[0],
+            noteContent: noteDetailsFromDatabase[1],
+            tagName: noteDetailsFromDatabase[2],
+            id: int.parse(noteDetailsFromDatabase[3]));
+
+        if (i.tagName == noteFromDatabase.tagName) {
+          Note tmp = Note(
+              noteTitle: noteFromDatabase.noteTitle,
+              noteContent: noteFromDatabase.noteContent,
+              tagName: noteFromDatabase.tagName,
+              id: noteFromDatabase.id);
+
+          notesWithSameTag = [...notesWithSameTag, tmp];
           totalTagCount++;
         }
       }
@@ -204,12 +218,29 @@ class _NoteScreenState extends State<NoteScreen> {
     if (noteDetails.tagName == deleteValue &&
         noteDetails.noteContent == deleteValue &&
         noteDetails.noteTitle == deleteValue) {
+      // for (var i in _noteDatabase.existingNotes) {
+      //   if (i.id == noteDetails.id) {
+      //     _noteDatabase.existingNotes.remove(i);
+      //     _noteDatabase.updateNoteDataBase();
+      //   }
+      // }
       _noteDatabase.removeNote(noteDetails.id);
     }
     setState(() {
       initializeExpansionTags();
     });
   }
+}
+
+class Note {
+  String noteTitle, noteContent, tagName;
+  int id;
+
+  Note(
+      {required this.noteTitle,
+      required this.noteContent,
+      required this.tagName,
+      required this.id});
 }
 
 class ExpansionTagContent {

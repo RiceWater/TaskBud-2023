@@ -30,10 +30,9 @@ class _SplashScreenState extends State<SplashScreen> {
       height: double.infinity,
       decoration: const BoxDecoration(
           gradient: LinearGradient(
-        begin: Alignment.bottomCenter,
-        end: Alignment.topLeft,
-        colors: [Color(0xff00b3b3), Color(0xff00b3b3)],
-      )),
+              begin: Alignment.bottomCenter,
+              end: Alignment.topLeft,
+              colors: [Color(0xffFEFBEA), Color(0xffFEFBEA)])),
       child: Center(
           child: Image.asset(
         'assets/images/TaskBud_logo.png',

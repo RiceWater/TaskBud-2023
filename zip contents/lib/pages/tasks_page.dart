@@ -55,12 +55,14 @@ class _TaskScreenState extends State<TaskScreen> {
   Widget build(BuildContext context) {
     _initalizeExpansionTasks();
     return Scaffold(
+      backgroundColor: Color(0xffe3cc9c),
       body: ListView(
         children: [
           _buildTaskList(),
         ],
       ),
       floatingActionButton: FloatingActionButton(
+        backgroundColor: Colors.lightGreen,
         child: const Icon(Icons.add),
         onPressed: () {
           _awaitReturnTaskFromTaskMakingScreen(context);
@@ -90,6 +92,7 @@ class _TaskScreenState extends State<TaskScreen> {
         children: expansionTasks
             .map<ExpansionPanel>((ExpansionTaskContent taskCategory) {
           return ExpansionPanel(
+            backgroundColor: const Color(0xffFEFBEA),
             headerBuilder: (BuildContext context, bool isExpanded) {
               return GestureDetector(
                   onTap: () {
@@ -125,13 +128,13 @@ class _TaskScreenState extends State<TaskScreen> {
                     controlAffinity: ListTileControlAffinity.leading,
                     value: taskCategory.tasksWithSameGroup[index].isDone,
                     onChanged: (bool? value) {
-                      toggleTaskIsDone(_taskDatabase
-                          .getIndex(taskCategory.tasksWithSameGroup[index]));
+                      toggleTaskIsDone(_taskDatabase.existingTasks
+                          .indexOf(taskCategory.tasksWithSameGroup[index]));
                     },
                   ),
                   onDismissed: (direction) {
-                    dismissTask(_taskDatabase
-                        .getIndex(taskCategory.tasksWithSameGroup[index]));
+                    dismissTask(_taskDatabase.existingTasks
+                        .indexOf(taskCategory.tasksWithSameGroup[index]));
                   },
                 ));
               },

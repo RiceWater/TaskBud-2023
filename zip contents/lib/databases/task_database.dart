@@ -18,19 +18,24 @@ class TaskDatabase {
           taskDeadline: DateTime.now(),
           isDone: false),
       Task(
+          taskTitle: 'Task 1.1',
+          taskContent: 'A text',
+          taskDeadline: DateTime.now(),
+          isDone: false),
+      Task(
           taskTitle: 'Task 2',
           taskContent: '',
-          taskDeadline: DateTime.now().add(Duration(days: 7)),
+          taskDeadline: DateTime.now().add(const Duration(days: 7)),
           isDone: false),
       Task(
           taskTitle: 'Task 3',
           taskContent: 'Nothing to see here',
-          taskDeadline: DateTime.now().add(Duration(days: 14)),
+          taskDeadline: DateTime.now().add(const Duration(days: 14)),
           isDone: false),
       Task(
           taskTitle: 'Task 4',
           taskContent: 'Task is done',
-          taskDeadline: DateTime.now().add(Duration(days: 14)),
+          taskDeadline: DateTime.now().add(const Duration(days: 14)),
           isDone: true),
     ];
   }

@@ -29,6 +29,9 @@ dependencies:
   hive_generator: ^2.0.0
   path_provider_android: 2.0.23
   shared_preferences_android: 2.0.16
+  flutter_local_notifications: ^13.0.0
+  timezone: ^0.9.0
+  flutter_native_timezone: ^2.0.0
 
 dependency_overrides:
  syncfusion_flutter_calendar: 20.3.61

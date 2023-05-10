@@ -33,9 +33,10 @@ class _SettingsFeedbackScreenState extends State<SettingsFeedbackScreen> {
     _displayEmailController.text = "To: ccs@gbox.adnu.edu.ph";
     return SafeArea(
         child: Scaffold(
+            backgroundColor: const Color(0xffFEFBEA),
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: Colors.white,
+              backgroundColor: const Color(0xffe3cc9c),
               foregroundColor: Colors.black,
               leading: IconButton(
                 icon: const Icon(Icons.arrow_back),

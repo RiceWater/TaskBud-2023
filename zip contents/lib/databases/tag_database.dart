@@ -12,7 +12,7 @@ class TagDatabase {
   }
 
   void loadTagData() {
-    existingTags = _tagBox.get('TAGS');
+    existingTags = _tagBox.get('TAGS').cast<String>();
   }
 
   void updateTagDataBase() {

@@ -41,7 +41,11 @@ class TaskDatabase {
   }
 
   void loadTaskData() {
-    existingTasks = _taskBox.get('TASKS');
+    // List<dynamic> dyn = _taskBox.get('TASKS');
+    // existingTasks = dyn
+    //     .map((element) => MyObject(id: element['id'], name: element['name']))
+    //     .toList();
+    existingTasks = _taskBox.get('TASKS').cast<Task>();
   }
 
   void updateTaskDataBase() {

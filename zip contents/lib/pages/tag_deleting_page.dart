@@ -25,9 +25,10 @@ class _TagDeletingScreenState extends State<TagDeletingScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
         child: Scaffold(
+            backgroundColor: Color(0xffFEFBEA),
             appBar: AppBar(
               elevation: 0,
-              backgroundColor: Colors.white,
+              backgroundColor: Color(0xffe3cc9c),
               foregroundColor: Colors.black,
               title: const Text('Delete Tags',
                   style: TextStyle(fontWeight: FontWeight.bold)),

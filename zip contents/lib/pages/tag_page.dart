@@ -32,9 +32,10 @@ class _TagMakingScreenState extends State<TagMakingScreen> {
   Widget build(BuildContext context) {
     return SafeArea(
       child: Scaffold(
+        backgroundColor: Color(0xffFEFBEA),
         appBar: AppBar(
           elevation: 0,
-          backgroundColor: Colors.white,
+          backgroundColor: Color(0xffe3cc9c),
           foregroundColor: Colors.black,
           title: Row(
             children: <Widget>[

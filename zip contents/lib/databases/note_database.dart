@@ -23,7 +23,7 @@ class NoteDatabase {
   }
 
   void loadNoteData() {
-    existingNotes = _noteBox.get('NOTES');
+    existingNotes = _noteBox.get('NOTES').cast<Note>();
   }
 
   void updateNoteDataBase() {

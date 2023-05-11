@@ -32,14 +32,14 @@ void main() async {
 
   //====================================
   //To reset when debugging/testing
-  final _tagBox = Hive.box('boxForTags');
-  final _noteBox = Hive.box('boxForNotes');
-  final _taskBox = Hive.box('boxForTasks');
-  final _settingsBox = Hive.box('boxForSettings');
-  _tagBox.clear();
-  _noteBox.clear();
-  _taskBox.clear();
-  _settingsBox.clear();
+  // final _tagBox = Hive.box('boxForTags');
+  // final _noteBox = Hive.box('boxForNotes');
+  // final _taskBox = Hive.box('boxForTasks');
+  // final _settingsBox = Hive.box('boxForSettings');
+  // _tagBox.clear();
+  // _noteBox.clear();
+  // _taskBox.clear();
+  // _settingsBox.clear();
   //====================================
 
   runApp(const MyApp());
